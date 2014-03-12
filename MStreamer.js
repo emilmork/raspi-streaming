@@ -55,7 +55,7 @@ MStreamer.prototype.start = function(callback) {
 
 	fs.exists(options.device, function(exists) {
 		if(!exists) {
-			print("device location not fount: " + options.device);
+			print("device location not found: " + options.device);
 			return;
 		}
 
@@ -81,11 +81,13 @@ MStreamer.prototype.start = function(callback) {
 // Stop mjpeg-streamer process
 MStreamer.prototype.stop = function() {
 	if(!isCapturing)  {
-		print("Not capturing");
+		print("not capturing");
 		return;
 	}
 	process.kill(process.pid, 'SIGHUP');
 	isCapturing = false;
+	
+	print("stopped");
 };
 
 var print = function(msg) {
