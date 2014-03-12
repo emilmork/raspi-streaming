@@ -19,7 +19,7 @@ var process;
 //Constructor
 var MStreamer = function(args){
 	if(args) {
-		options = args;
+		this.setOptions(args);
 	} 
 };
 
@@ -41,6 +41,7 @@ MStreamer.prototype.setOptions = function(args) {
 				continue;
 			}
 			options[key] = args[key];
+			print(key + " set to: " + args[key]);
 		}
 	}
 };
