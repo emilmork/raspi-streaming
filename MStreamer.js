@@ -2,7 +2,7 @@
 var spawn = require('child_process').spawn;
 var fs = require('fs');
 
-var cmd = "mjpg-streamer";
+var cmd = "mjpg_streamer";
 // Default options
 var options = {
     device : '/dev/video0',
