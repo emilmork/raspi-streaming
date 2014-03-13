@@ -3,21 +3,21 @@ var spawn = require('child_process').spawn;
 var fs = require('fs');
 
 var cmd = "mjpg_streamer";
-// Default options
-var options = {
-    device : '/dev/video0',
-    resolution : 'SVGA',
-    framerate : 15,
-    port : 8090,
-    fileFolder : 'usr/local/lib/'
-  };
-
 
 var isCapturing = false;
 var process;
-
 //Constructor
 var MStreamer = function(args){
+	
+	//default options
+	this.options = {
+	    device : '/dev/video0',
+	    resolution : 'SVGA',
+	    framerate : 15,
+	    port : 8090,
+	    fileFolder : 'usr/local/lib/'
+	  };
+
 	if(args) {
 		this.setOptions(args);
 	} 
@@ -26,9 +26,9 @@ var MStreamer = function(args){
 // Returns mjpeg-streamer arguments
 var getArgs = function() {
 	return [ '-i' ,
-              options.fileFolder +'input_uvc.so -r ' + options.resolution + ' -f ' + options.framerate,
+              this.options.fileFolder +'input_uvc.so -r ' + this.options.resolution + ' -f ' + this.options.framerate,
               '-o',
-              options.fileFolder + 'output_http.so -p ' + options.port
+              this.options.fileFolder + 'output_http.so -p ' + this.options.port
             ];
 }
 
@@ -36,11 +36,11 @@ var getArgs = function() {
 MStreamer.prototype.setOptions = function(args) {
 	for(var key in args) {
 		if(args.hasOwnProperty(key)) {
-			if(!options.hasOwnProperty(key)) {
+			if(!this.options.hasOwnProperty(key)) {
 				print(key + " is not a valid property");
 				continue;
 			}
-			options[key] = args[key];
+			this.options[key] = args[key];
 			print(key + " set to: " + args[key]);
 		}
 	}
@@ -48,14 +48,16 @@ MStreamer.prototype.setOptions = function(args) {
 
 // Start mjpeg-streamer process
 MStreamer.prototype.start = function(callback) {
+	var _self = this;
+
 	if(isCapturing) {
 		console.log("already capturing");
 		return;
 	}
 
-	fs.exists(options.device, function(exists) {
+	fs.exists(this.options.device, function(exists) {
 		if(!exists) {
-			print("device location not found: " + options.device);
+			print("device location not found: " + _self.options.device);
 			return;
 		}
 
@@ -75,7 +77,7 @@ MStreamer.prototype.start = function(callback) {
 	    	print('child process exited with code ' + code);
 	    }); 
 
-	    print("started streaming on port: " + options.port);
+	    print("started streaming on port: " + _self.options.port);
 	});
 };
 // Stop mjpeg-streamer process
